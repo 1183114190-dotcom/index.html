@@ -1,0 +1,682 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f8e8ea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="再过几天就见面">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" href="images/main-memory.jpg">
+  <title>再过几天就见面</title>
+  <style>
+    :root {
+      --cream: #fffaf2;
+      --paper: #fffdf8;
+      --milk: #f7eadf;
+      --pink: #f5cbd3;
+      --pink-deep: #d98091;
+      --lavender: #ddd4f3;
+      --text: #4f3c3f;
+      --muted: #8f787d;
+      --line: rgba(128, 92, 98, 0.14);
+      --shadow: 0 18px 45px rgba(128, 92, 98, 0.14);
+      --soft-shadow: 0 10px 24px rgba(128, 92, 98, 0.12);
+      --radius: 24px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--cream);
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", sans-serif;
+      background:
+        linear-gradient(145deg, rgba(245, 203, 211, 0.28), transparent 34%),
+        linear-gradient(25deg, transparent 52%, rgba(221, 212, 243, 0.34)),
+        var(--cream);
+      letter-spacing: 0;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      width: min(100%, 460px);
+      min-height: 100vh;
+      margin: 0 auto;
+      padding: max(18px, env(safe-area-inset-top)) 18px max(30px, env(safe-area-inset-bottom));
+    }
+
+    .hero {
+      padding: 20px 2px 10px;
+      text-align: center;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 12px;
+      padding: 7px 12px;
+      border: 1px solid rgba(217, 128, 145, 0.18);
+      border-radius: 999px;
+      background: rgba(255, 253, 248, 0.7);
+      color: var(--pink-deep);
+      font-size: 12px;
+      box-shadow: 0 8px 20px rgba(217, 128, 145, 0.08);
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--pink-deep);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(30px, 9vw, 42px);
+      line-height: 1.12;
+      font-weight: 800;
+    }
+
+    .intro {
+      width: min(100%, 330px);
+      margin: 14px auto 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .card {
+      margin-top: 18px;
+      border: 1px solid rgba(255, 255, 255, 0.76);
+      border-radius: var(--radius);
+      background: rgba(255, 253, 248, 0.84);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .countdown-card {
+      padding: 22px 16px 18px;
+      text-align: center;
+    }
+
+    .section-title {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .time-box {
+      min-width: 0;
+      padding: 13px 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #fff, #fff6f4);
+      box-shadow: var(--soft-shadow);
+    }
+
+    .time-box strong {
+      display: block;
+      min-height: 34px;
+      font-size: clamp(23px, 8vw, 34px);
+      line-height: 1;
+      font-weight: 850;
+      color: #6b4b53;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .time-box span {
+      display: block;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .meet-message {
+      min-height: 22px;
+      margin: 15px 0 0;
+      color: var(--pink-deep);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .photo-note {
+      width: min(90%, 360px);
+      margin: 20px auto 0;
+      padding: 10px 10px 14px;
+      transform: rotate(-1.2deg);
+      border-radius: 22px;
+      background: #fff;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .photo-note.is-small {
+      width: 100%;
+      margin-top: 14px;
+      transform: rotate(0.8deg);
+    }
+
+    .photo-wrap {
+      position: relative;
+      overflow: hidden;
+      border-radius: 17px;
+      background: #f4ece8;
+      aspect-ratio: 4 / 5;
+    }
+
+    .photo-wrap.wide {
+      aspect-ratio: 4 / 3;
+    }
+
+    .photo-wrap img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .image-fallback {
+      display: none;
+      position: absolute;
+      inset: 0;
+      place-items: center;
+      padding: 18px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 14px;
+      line-height: 1.6;
+      background: repeating-linear-gradient(
+        -8deg,
+        #fff7f4,
+        #fff7f4 12px,
+        #f8ebe7 13px,
+        #f8ebe7 24px
+      );
+    }
+
+    .photo-wrap.missing img {
+      display: none;
+    }
+
+    .photo-wrap.missing .image-fallback {
+      display: grid;
+    }
+
+    .caption {
+      margin: 12px 4px 0;
+      color: #7e666b;
+      font-size: 13px;
+      line-height: 1.65;
+      text-align: center;
+    }
+
+    .paper-card {
+      padding: 18px;
+    }
+
+    .paper-card header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .paper-card h2 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.25;
+    }
+
+    .day-tag {
+      flex: 0 0 auto;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f7e7f2;
+      color: #8b6a95;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .note-text {
+      margin: 0;
+      color: #675157;
+      font-size: 15px;
+      line-height: 1.85;
+    }
+
+    .miss-card {
+      padding: 18px;
+      text-align: center;
+    }
+
+    .miss-button {
+      width: 100%;
+      min-height: 52px;
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 800;
+      background: linear-gradient(135deg, #d98091, #b98bd5);
+      box-shadow: 0 14px 26px rgba(185, 139, 213, 0.22);
+      cursor: pointer;
+      transition: transform 160ms ease, box-shadow 160ms ease;
+    }
+
+    .miss-button:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: 0 9px 18px rgba(185, 139, 213, 0.2);
+    }
+
+    .miss-hint {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .todo-card {
+      padding: 18px;
+    }
+
+    .todo-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .todo-list li {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.7);
+      color: #634f54;
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .todo-list li::before {
+      content: "";
+      flex: 0 0 auto;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--pink);
+      box-shadow: 0 0 0 4px rgba(245, 203, 211, 0.22);
+    }
+
+    .footer {
+      padding: 24px 12px 8px;
+      color: #9a8388;
+      text-align: center;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      background: rgba(85, 58, 64, 0.24);
+      backdrop-filter: blur(8px);
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-box {
+      width: min(100%, 340px);
+      padding: 22px 18px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+      border-radius: 26px;
+      background: #fffdf8;
+      box-shadow: 0 24px 70px rgba(82, 54, 60, 0.2);
+      text-align: center;
+      animation: liftIn 180ms ease both;
+    }
+
+    .modal-title {
+      margin: 0 0 12px;
+      color: var(--pink-deep);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .modal-text {
+      margin: 0;
+      color: #5d464c;
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .modal-close {
+      margin-top: 18px;
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid rgba(217, 128, 145, 0.18);
+      border-radius: 999px;
+      background: #fff3f4;
+      color: var(--pink-deep);
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    @keyframes liftIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.98);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    @media (max-width: 360px) {
+      .app {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .time-grid {
+        gap: 6px;
+      }
+
+      .time-box {
+        border-radius: 15px;
+        padding-left: 3px;
+        padding-right: 3px;
+      }
+
+      .todo-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero" aria-labelledby="pageTitle">
+      <p class="eyebrow">给我们的小小倒计时</p>
+      <h1 id="pageTitle">再过几天就见面</h1>
+      <p class="intro">这几天不算远，只是我们见面前的一小段倒计时。</p>
+    </section>
+
+    <section class="card countdown-card" aria-label="见面倒计时">
+      <p class="section-title">距离见面还有</p>
+      <div class="time-grid" aria-live="polite">
+        <div class="time-box"><strong id="days">0</strong><span>天</span></div>
+        <div class="time-box"><strong id="hours">00</strong><span>小时</span></div>
+        <div class="time-box"><strong id="minutes">00</strong><span>分钟</span></div>
+        <div class="time-box"><strong id="seconds">00</strong><span>秒</span></div>
+      </div>
+      <p class="meet-message" id="meetMessage"></p>
+
+      <article class="photo-note" aria-label="回忆小卡片">
+        <div class="photo-wrap wide">
+          <!-- ② 首页回忆照片：想换首页照片时，改下面 src。 -->
+          <img src="images/main-memory.jpg" alt="一张属于我们的回忆照片" onerror="showImageFallback(this)">
+          <div class="image-fallback">这张回忆照片暂时没有加载出来，但它还在这里等你。</div>
+        </div>
+        <p class="caption">那天和你在一起的时候，我其实很开心。</p>
+      </article>
+    </section>
+
+    <section class="card paper-card" aria-label="今日小纸条">
+      <header>
+        <h2>今日小纸条</h2>
+        <span class="day-tag" id="dayTag">今天</span>
+      </header>
+      <p class="note-text" id="dailyNote">正在把今天的小纸条放进来。</p>
+      <article class="photo-note is-small">
+        <div class="photo-wrap">
+          <img id="dailyPhoto" src="images/day1.jpg" alt="今日解锁照片" onerror="showImageFallback(this)">
+          <div class="image-fallback">今天的照片暂时没有加载出来，先把想念放在这里。</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="card miss-card" aria-label="我想你了">
+      <button class="miss-button" id="missButton" type="button">我想你了</button>
+      <p class="miss-hint">点一下，会收到一句只给你的回复。</p>
+    </section>
+
+    <section class="card todo-card" aria-label="见面后想做的事">
+      <p class="section-title">见面后想做的事</p>
+      <ul class="todo-list">
+        <li>抱一下</li>
+        <li>一起吃饭</li>
+        <li>散步</li>
+        <li>听你讲这几天发生的事</li>
+        <li>拍一张新的合照</li>
+        <li>陪你做一个你纠结的小决定</li>
+      </ul>
+    </section>
+
+    <p class="footer">照片只从本地 images 文件夹读取。没有上传、定位、摄像头、麦克风和追踪脚本。</p>
+  </main>
+
+  <div class="modal" id="missModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <p class="modal-title" id="modalTitle">收到你的想念了</p>
+      <p class="modal-text" id="modalText"></p>
+      <button class="modal-close" id="modalClose" type="button">好，先存起来</button>
+    </div>
+  </div>
+
+  <script>
+    /*
+      ① 见面时间：把这里改成你们真实见面的时间。
+      格式说明：2026-06-25T18:30:00+08:00 表示 2026 年 6 月 25 日 18 点 30 分。
+    */
+    const MEET_TIME = new Date("2026-06-25T18:30:00+08:00");
+
+    /*
+      每日小纸条从哪一天开始算：如果你希望今天就是第 1 天，改成今天日期。
+      格式说明：2026-06-18T00:00:00+08:00 表示 2026 年 6 月 18 日。
+    */
+    const START_DATE = new Date("2026-06-18T00:00:00+08:00");
+
+    /*
+      ③ 每日小纸条文案 + ④ 每日照片路径：
+      想增加更多天数，就按 { day: 6, text: "...", image: "images/day6.jpg" } 继续添加。
+    */
+    const DAILY_NOTES = [
+      {
+        day: 1,
+        text: "今天开始倒数啦。虽然暂时不在一个地方，但我还是会想着你今天有没有好好吃饭。",
+        image: "images/day1.jpg"
+      },
+      {
+        day: 2,
+        text: "今天也不用把自己照顾得很完美，记得吃饭，记得休息，也记得想我一下。",
+        image: "images/day2.jpg"
+      },
+      {
+        day: 3,
+        text: "今天不许偷偷难过。想我就说，想被哄也可以说。",
+        image: "images/day3.jpg"
+      },
+      {
+        day: 4,
+        text: "再过几天就见面啦。现在先把抱抱攒起来，到时候一起补。",
+        image: "images/day4.jpg"
+      },
+      {
+        day: 5,
+        text: "我发现，见不到你的时候，连普通的一天都会变得有点慢。",
+        image: "images/day5.jpg"
+      }
+    ];
+
+    const PRE_MEET_NOTE = {
+      label: "见面前一天",
+      text: "明天见。这句话我已经想说好多天了。",
+      image: "images/day5.jpg"
+    };
+
+    const DEFAULT_NOTES = [
+      {
+        label: "今天",
+        text: "今天也把想念放轻一点，等见面的时候再慢慢说给你听。",
+        image: "images/main-memory.jpg"
+      },
+      {
+        label: "今天",
+        text: "普通的一天也可以很可爱，因为它正在把我们往见面那天推近一点。",
+        image: "images/day1.jpg"
+      },
+      {
+        label: "今天",
+        text: "要记得好好吃饭，好好睡觉，也要记得，我一直在倒数见你的日子。",
+        image: "images/day2.jpg"
+      }
+    ];
+
+    /*
+      ⑤ 随机想你文案：
+      点击“我想你了”按钮时，会从这里随机抽一句。
+    */
+    const MISS_REPLIES = [
+      "我也想你，先欠你一个抱抱，见面补。",
+      "你点这个的时候，我应该也正在想你。",
+      "再坚持几天，我就可以当面烦你了。",
+      "不许一个人偷偷难过，有事找我。",
+      "这几天不算远，我们是在一起倒数见面的日子。"
+    ];
+
+    const pad = (number) => String(number).padStart(2, "0");
+    const oneDay = 24 * 60 * 60 * 1000;
+
+    function startOfDay(date) {
+      return new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const diff = MEET_TIME.getTime() - now.getTime();
+
+      if (diff <= 0) {
+        document.getElementById("days").textContent = "0";
+        document.getElementById("hours").textContent = "00";
+        document.getElementById("minutes").textContent = "00";
+        document.getElementById("seconds").textContent = "00";
+        document.getElementById("meetMessage").textContent = "终于可以见面啦。";
+        return;
+      }
+
+      const days = Math.floor(diff / oneDay);
+      const hours = Math.floor((diff % oneDay) / (60 * 60 * 1000));
+      const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+      const seconds = Math.floor((diff % (60 * 1000)) / 1000);
+
+      document.getElementById("days").textContent = days;
+      document.getElementById("hours").textContent = pad(hours);
+      document.getElementById("minutes").textContent = pad(minutes);
+      document.getElementById("seconds").textContent = pad(seconds);
+      document.getElementById("meetMessage").textContent = "我们正在靠近见面的那一天。";
+    }
+
+    function pickDailyNote() {
+      const now = new Date();
+      const remainingDays = Math.ceil((MEET_TIME.getTime() - now.getTime()) / oneDay);
+
+      if (remainingDays === 1) {
+        return PRE_MEET_NOTE;
+      }
+
+      const dayNumber = Math.floor((startOfDay(now) - startOfDay(START_DATE)) / oneDay) + 1;
+      const matched = DAILY_NOTES.find((item) => item.day === dayNumber);
+
+      if (matched) {
+        return {
+          label: `第 ${matched.day} 天`,
+          text: matched.text,
+          image: matched.image
+        };
+      }
+
+      const randomIndex = Math.floor(Math.random() * DEFAULT_NOTES.length);
+      return DEFAULT_NOTES[randomIndex];
+    }
+
+    function renderDailyNote() {
+      const note = pickDailyNote();
+      const dailyPhoto = document.getElementById("dailyPhoto");
+
+      document.getElementById("dayTag").textContent = note.label;
+      document.getElementById("dailyNote").textContent = note.text;
+      dailyPhoto.closest(".photo-wrap").classList.remove("missing");
+      dailyPhoto.src = note.image;
+    }
+
+    function showImageFallback(image) {
+      const wrap = image.closest(".photo-wrap");
+      if (wrap) {
+        wrap.classList.add("missing");
+      }
+    }
+
+    function openMissModal() {
+      const modal = document.getElementById("missModal");
+      const text = MISS_REPLIES[Math.floor(Math.random() * MISS_REPLIES.length)];
+
+      document.getElementById("modalText").textContent = text;
+      modal.classList.add("show");
+      document.getElementById("modalClose").focus();
+    }
+
+    function closeMissModal() {
+      document.getElementById("missModal").classList.remove("show");
+      document.getElementById("missButton").focus();
+    }
+
+    document.getElementById("missButton").addEventListener("click", openMissModal);
+    document.getElementById("modalClose").addEventListener("click", closeMissModal);
+    document.getElementById("missModal").addEventListener("click", (event) => {
+      if (event.target.id === "missModal") closeMissModal();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeMissModal();
+    });
+
+    updateCountdown();
+    renderDailyNote();
+    setInterval(updateCountdown, 1000);
+  </script>
+</body>
+</html>
